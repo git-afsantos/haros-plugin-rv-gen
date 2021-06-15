@@ -1,64 +1,66 @@
 # -*- coding: utf-8 -*-
 
-#Copyright (c) 2021 André Santos
-#
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# SPDX-License-Identifier: MIT
+# Copyright © 2021 André Santos
 
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
-
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
-
+try:
+    import regex as re
+except ImportError:
+    import re
 import os
 from setuptools import setup, find_packages
 
-# Utility function to read the README file.
-# Used for the long_description.  It"s nice, because now 1) we have a top level
-# README file and 2) it"s easier to type in the README file than to put a raw
-# string in below ...
+SOURCE = os.path.relpath(os.path.join(os.path.dirname(__file__), 'src'))
+
+# Utility function to read the README, etc..
+# Used for the long_description and other fields.
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    with open(os.path.join(os.path.dirname(__file__), fname)) as f:
+        contents = f.read()
+    return contents
 
+__version__ ,= re.findall("__version__ = '(.*)'",
+    read('src/haros_plugin_hplrv/__init__.py'))
 
-# Courtesy of https://stackoverflow.com/a/36693250
-def package_files(directory):
-    paths = []
-    for (path, directories, filenames) in os.walk(directory):
-        for filename in filenames:
-            paths.append(os.path.join("..", path, filename))
-    return paths
-
-
-extra_files = package_files("haros_plugin_rv_gen/templates")
-extra_files.append("haros_plugin_rv_gen/plugin.yaml")
-
+requirements = [r for r in read('requirements.txt').splitlines() if r]
 
 setup(
-    name = "haros_plugin_rv_gen",
-    version = "0.1.0",
-    author = "André Santos",
-    author_email = "andre.f.santos@inesctec.pt",
-    description = "HAROS plugin to generate runtime monitors.",
-    #long_description = read("README.rst"),
-    license = "MIT",
-    keywords = "ros runtime-monitoring runtime-verification",
-    url = "https://github.com/git-afsantos/haros-plugin-rv-gen",
-    packages = find_packages(),
-    #entry_points = {"console_scripts": ["haros = haros.haros:main"]},
-    package_data = {"haros_plugin_rv_gen": extra_files},
-    install_requires = [
-        "Jinja2>=2.10.0"
+    name             = 'haros-plugin-rv-gen',
+    version          = __version__,
+    author           = u'André Santos',
+    author_email     = 'contact.andre.santos@gmail.com',
+    description      = 'HAROS plugin for RV generation',
+    long_description = read('README.md'),
+    long_description_content_type = 'text/markdown',
+    license          = 'MIT',
+    keywords         = 'haros ros plugin rv runtime-monitoring runtime-verfication',
+    url              = 'https://github.com/git-afsantos/haros-plugin-rv-gen',
+    packages         = find_packages(SOURCE),
+    package_dir      = {'': SOURCE},
+    package_data     = {'haros-plugin-rv-gen': []},
+    classifiers      = [
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Topic :: Scientific/Engineering',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Software Development :: Quality Assurance',
     ],
-    zip_safe = True
+    python_requires  = '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*',
+    install_requires = requirements,
+    extras_require   = {},
+    zip_safe         = False
 )
