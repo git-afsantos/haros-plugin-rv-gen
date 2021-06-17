@@ -33,7 +33,7 @@ def package_analysis(iface, pkg):
             iface.log_debug('node {} has no properties'.format(node.node_name))
             continue
         try:
-            code = r.render_node(node.hpl_properties)
+            code = r.render_rospy_node(node.hpl_properties)
             filename = node.node_name.replace('/', '.') + '.rv.py'
             with open(filename, 'w') as f:
                 f.write(code)
@@ -49,7 +49,7 @@ def configuration_analysis(iface, config):
     _validate_settings(iface, settings)
     try:
         r = TemplateRenderer()
-        code = r.render_node(config.hpl_properties)
+        code = r.render_rospy_node(config.hpl_properties)
         filename = config.name + '.rv.py'
         with open(filename, 'w') as f:
             f.write(code)
