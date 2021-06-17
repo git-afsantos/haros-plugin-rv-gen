@@ -23,6 +23,22 @@ EMPTY_DICT = {}
 # Plugin Entry Point
 ################################################################################
 
+def package_analysis(iface, pkg):
+    if not pkg.nodes:
+        return
+    r = TemplateRenderer()
+    for node in pkg.nodes:
+        if not node.hpl_properties:
+            continue
+        try:
+            code = r.render_node(node.hpl_properties)
+            filename = node.node_name.replace('/', '.') + '.rv.py'
+            with open(filename, 'w') as f:
+                f.write(code)
+            iface.export_file(filename)
+        except Exception as e:
+            iface.log_error(repr(e))
+
 def configuration_analysis(iface, config):
     if not config.hpl_properties:
         return
@@ -31,7 +47,7 @@ def configuration_analysis(iface, config):
     try:
         r = TemplateRenderer()
         code = r.render_node(config.hpl_properties)
-        filename = config.name + '_rv.py'
+        filename = config.name + '.rv.py'
         with open(filename, 'w') as f:
             f.write(code)
         iface.export_file(filename)
