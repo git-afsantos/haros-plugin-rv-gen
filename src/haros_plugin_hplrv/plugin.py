@@ -32,8 +32,9 @@ def package_analysis(iface, pkg):
         if not node.hpl_properties:
             iface.log_debug('node {} has no properties'.format(node.node_name))
             continue
+        topics = _get_node_topics(node)
         try:
-            code = r.render_rospy_node(node.hpl_properties)
+            code = r.render_rospy_node(node.hpl_properties, topics)
             filename = node.node_name.replace('/', '.') + '.rv.py'
             with open(filename, 'w') as f:
                 f.write(code)
@@ -41,15 +42,17 @@ def package_analysis(iface, pkg):
         except Exception as e:
             iface.log_error(repr(e))
 
+
 def configuration_analysis(iface, config):
     if not config.hpl_properties:
         iface.log_debug('config {} has no properties'.format(config.name))
         return
     settings = config.user_attributes.get(KEY, EMPTY_DICT)
     _validate_settings(iface, settings)
+    topics = _get_config_topics(config)
     try:
         r = TemplateRenderer()
-        code = r.render_rospy_node(config.hpl_properties)
+        code = r.render_rospy_node(config.hpl_properties, topics)
         filename = config.name + '.rv.py'
         with open(filename, 'w') as f:
             f.write(code)
@@ -57,5 +60,30 @@ def configuration_analysis(iface, config):
     except Exception as e:
         iface.log_error(repr(e))
 
+
+################################################################################
+# Helper Functions
+################################################################################
+
 def _validate_settings(iface, settings):
     pass
+
+def _get_node_topics(node):
+    topics = {}
+    for call in node.advertise + node.subscribe:
+        name = call.full_name
+        rostype = call.rostype or ''
+        if not '/' in rostype:
+            continue
+        topics[name] = rostype
+    return topics
+
+def _get_config_topics(config):
+    topics = {}
+    for topic in config.topics:
+        name = topic.rosname.full
+        rostype = topic.type
+        if '?' in name or '?' in rostype:
+            continue
+        topics[name] = rostype
+    return topics
