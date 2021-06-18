@@ -7,8 +7,9 @@
 # Imports
 ###############################################################################
 
-from hplrv.rendering import TemplateRenderer
+import os
 
+from hplrv.rendering import TemplateRenderer
 
 ###############################################################################
 # Constants
@@ -39,6 +40,9 @@ def package_analysis(iface, pkg):
             filename = node.node_name.replace('/', '.') + '.rv.py'
             with open(filename, 'w') as f:
                 f.write(code)
+            mode = os.stat(filename).st_mode
+            mode |= (mode & 0o444) >> 2
+            os.chmod(filename, mode)
             iface.export_file(filename)
         except Exception as e:
             iface.log_error(e)
