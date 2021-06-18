@@ -34,13 +34,14 @@ def package_analysis(iface, pkg):
             continue
         topics = _get_node_topics(node)
         try:
+            iface.log_debug('{}\n{}'.format(node.hpl_properties, topics))
             code = r.render_rospy_node(node.hpl_properties, topics)
             filename = node.node_name.replace('/', '.') + '.rv.py'
             with open(filename, 'w') as f:
                 f.write(code)
             iface.export_file(filename)
         except Exception as e:
-            iface.log_error(repr(e))
+            iface.log_error(e)
 
 
 def configuration_analysis(iface, config):
