@@ -23,6 +23,8 @@ pip install -e .
 
 Annotate systems and nodes with HPL properties in HAROS files to have runtime monitor generation take place.
 
+Generated monitors can be found in the `export` directory of the HAROS home directory (e.g., `~/.haros/export/haros_plugin_rv_gen`).
+
 ## Bugs, Questions and Support
 
 Please use the [issue tracker](https://github.com/git-afsantos/haros-plugin-rv-gen/issues).
