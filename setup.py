@@ -37,7 +37,7 @@ setup(
     url              = 'https://github.com/git-afsantos/haros-plugin-rv-gen',
     packages         = find_packages(SOURCE),
     package_dir      = {'': SOURCE},
-    package_data     = {'haros-plugin-rv-gen': []},
+    package_data     = {'haros-plugin-rv-gen': ["plugin.yaml"]},
     classifiers      = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
