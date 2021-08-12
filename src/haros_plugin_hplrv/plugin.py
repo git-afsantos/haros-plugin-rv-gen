@@ -19,6 +19,9 @@ KEY = 'haros_plugin_hplrv'
 
 EMPTY_DICT = {}
 
+# Python 2/3 compatible
+if not hasattr(__builtins__, 'basestring'): basestring = (str, bytes)
+
 
 ################################################################################
 # Plugin Entry Point
@@ -30,8 +33,9 @@ def package_analysis(iface, pkg):
         return
     r = TemplateRenderer()
     for node in pkg.nodes:
-        if not node.hpl_properties:
-            iface.log_debug('node {} has no properties'.format(node.node_name))
+        if not _has_parsed_properties(node):
+            iface.log_debug(
+                '"{}" has no parsed properties'.format(node.node_name))
             continue
         topics = _get_node_topics(node)
         try:
@@ -49,8 +53,8 @@ def package_analysis(iface, pkg):
 
 
 def configuration_analysis(iface, config):
-    if not config.hpl_properties:
-        iface.log_debug('config {} has no properties'.format(config.name))
+    if not _has_parsed_properties(config):
+        iface.log_debug('"{}" has no parsed properties'.format(config.name))
         return
     settings = config.user_attributes.get(KEY, EMPTY_DICT)
     _validate_settings(iface, settings)
@@ -92,3 +96,9 @@ def _get_config_topics(config):
             continue
         topics[name] = rostype
     return topics
+
+def _has_parsed_properties(target):
+    for p in target.hpl_properties:
+        if not isinstance(p, basestring):
+            return True
+    return False
