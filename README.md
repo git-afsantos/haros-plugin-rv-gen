@@ -1,7 +1,7 @@
 # HAROS RV Generation Plugin
 
 This package provides a [HAROS](https://github.com/git-afsantos/haros) plugin to generate runtime monitors based on [HPL](https://github.com/git-afsantos/hpl-specs) specifications.
-In essence, this plugin is just a wrapper for the [HPL RV gen](https://github.com/git-afsantos/hpl-rv-gen) library.
+In essence, this plugin is just a wrapper for the [HPL RV ROS](https://github.com/HAROS-framework/hpl-rv-ros) library.
 
 ## Installing
 
