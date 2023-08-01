@@ -3,7 +3,7 @@
 # Copyright © 2021 André Santos
 ---
 name: haros_plugin_hplrv
-version: 0.1.0
+version: 1.0.0
 languages:
     - cpp
     - python
